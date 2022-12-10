@@ -1,5 +1,6 @@
 <br>
 
+# Dev branch
 # Nanopore WGS analysis pipeline  
 
 nextflow-nanoproe is a Nextflow pipeline for analysis of Nanopore Whole Genome Sequencing.
