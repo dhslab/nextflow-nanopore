@@ -7,7 +7,7 @@ nextflow-nanoproe is a Nextflow pipeline for analysis of Nanopore Whole Genome S
 
 
 ## Pipeline summary
-1. Basecalling ([`Guppy`](https://nanoporetech.com/nanopore-sequencing-data-analysis))
+1. Basecalling and Alignment ([`Guppy`](https://nanoporetech.com/nanopore-sequencing-data-analysis))
 
 
 
