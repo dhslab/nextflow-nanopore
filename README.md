@@ -1,13 +1,19 @@
 <br>
 
-# Dev branch
-# Nanopore WGS analysis pipeline  
+# Nanopore WGS analysis pipeline
 
-nextflow-nanoproe is a Nextflow pipeline for analysis of Nanopore Whole Genome Sequencing.
+**nextflow-nanoproe** is a Nextflow pipeline for analysis of Nanopore Whole Genome Sequencing.
 
 
 ## Pipeline summary
-1. Basecalling and Alignment ([`Guppy`](https://nanoporetech.com/nanopore-sequencing-data-analysis))
+1. Basecalling ([`Guppy`](https://nanoporetech.com/nanopore-sequencing-data-analysis)) - with GPU run option
+1. Basecalling QC ([`PycoQC`](https://a-slide.github.io/pycoQC/))
+1. Alignment ([`Guppy`](https://nanoporetech.com/nanopore-sequencing-data-analysis) with [`minimap2`](https://github.com/lh3/minimap2))
+1. Merge all aligned bam files into asingle file ([`samtools`](http://www.htslib.org/doc/samtools.html))
+1. Haplotyping and phased variants calling ([`PEPPER-Margin-DeepVariant`](https://github.com/kishwarshafin/pepper))
+1. Depth calculation ([`mosdepth`](https://github.com/brentp/mosdepth))
+1. MultiQC ([`MultiQC`](https://multiqc.info/)) for Basecalling (PycoQC) and Depth (mosdepth)
+
 
 
 
@@ -15,21 +21,38 @@ nextflow-nanoproe is a Nextflow pipeline for analysis of Nanopore Whole Genome S
 ## Usage
 ### Input files:
 1. fast5 raw reads provided as a full path for the directory containing all fast5 files, either in a configuration file or as (--input path/to/fast5) command line parameter.
-2. Path for reference genome fasta file, either in a configuration file or as (--genome path/to/genome.fasta) command line parameter.
+2. Path for reference genome fasta file, either in a configuration file or as (--genome_fasta path/to/genome.fasta) command line parameter.
 
-## Running pipeline in LSF cluster (configured to WashU RIS cluster environment)
+### Running pipeline in LSF cluster (configured to WashU RIS cluster environment)
+#### Example: Test run in RIS cluster
+- This test run takes input of:
+  - One .fast5 file
+  - chr22.fasta as referecne genome
 
-To run directly from GitHub, only a config file is needed (for testing: download and save test_ris.config file to launch directory). Use the following command:
+#### 1) Running directly from GitHub:
 ```bash
-NXF_HOME=${PWD}/.nextflow LSF_DOCKER_VOLUMES="/storage1/fs1/dspencer/Active:/storage1/fs1/dspencer/Active $HOME:$HOME" bsub -g /dspencer/nextflow -G compute-dspencer -q dspencer -e nextflow_launcher.err -o nextflow_launcher.log -We 2:00 -n 2 -M 12GB -R "select[mem>=16000] span[hosts=1] rusage[mem=16000]" -a "docker(mdivr/centos:v0.1)" nextflow run dhslab/nextflow-nanopore -r main -profile ris -c test_ris.config
+NXF_HOME=${PWD}/.nextflow LSF_DOCKER_VOLUMES="/storage1/fs1/dspencer/Active:/storage1/fs1/dspencer/Active /scratch1/fs1/dspencer:/scratch1/fs1/dspencer $HOME:$HOME" bsub -g /dspencer/nextflow -G compute-dspencer -q dspencer -e nextflow_launcher.err -o nextflow_launcher.log -We 2:00 -n 2 -M 12GB -R "select[mem>=16000] span[hosts=1] rusage[mem=16000]" -a "docker(mdivr/centos:v0.1)" nextflow run dhslab/nextflow-nanopore -r main -profile ris,dhslab_test
 ```
 
-Alternatively,  clone the repository and run the pipeline from local directory:
+#### 2) Alternatively, clone the repository and run the pipeline from local directory:
 ```bash
 git clone https://github.com/dhslab/nextflow-nanopore.git
 cd nextflow-nanopore/
-LSF_DOCKER_VOLUMES="/storage1/fs1/dspencer/Active:/storage1/fs1/dspencer/Active $HOME:$HOME" bsub < lsf_launch.sh
+LSF_DOCKER_VOLUMES="/storage1/fs1/dspencer/Active:/storage1/fs1/dspencer/Active /scratch1/fs1/dspencer:/scratch1/fs1/dspencer $HOME:$HOME" bsub -g /dspencer/nextflow -G compute-dspencer -q dspencer -e nextflow_launcher.err -o nextflow_launcher.log -We 2:00 -n 2 -M 12GB -R "select[mem>=16000] span[hosts=1] rusage[mem=16000]" -a "docker(mdivr/centos:v0.1)" nextflow run main.nf -profile ris,dhslab_test
 ```
+
+### Note:
+Instead of running 
+```
+nextflow run main.nf -profile ris,dhslab_test
+```
+you can run:
+```
+nextflow run main.nf -profile ris -c conf/dhslab_test.config
+```
+The above two examples are interchangeable. As **dhslab profile** (defined in nextflow.config file) is basically just importing (or including in nextflow language) **conf/dhslab_test.config** file to the pipeline scope and append it to the configurations.
+
+However "```-profile ris```" is still required in both cases as it is important to define the LSF runtime commands.
 - Output:
   - "results/" is the desired output from the test run
   - "work/" is the working directory for all tasks, can be removed if the pipeline ran successfully

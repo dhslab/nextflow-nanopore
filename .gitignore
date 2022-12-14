@@ -5,3 +5,7 @@ results/
 testing/
 testing*
 *.pyc
+.*
+nextflow_launcher.log
+nextflow_launcher.err
+temp.txt

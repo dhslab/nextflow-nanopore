@@ -8,3 +8,5 @@ rm -rf out
 rm -rf .nextflow*
 rm -rf .vscode
 rm -rf results_mini
+rm -rf nextflow_launcher.err
+rm -rf nextflow_launcher.log
