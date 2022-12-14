@@ -26,7 +26,7 @@
 ### Running pipeline in LSF cluster (configured to WashU RIS cluster environment)
 #### Example: Test run in RIS cluster
 - This test run takes input of:
-  - One .fast5 file
+  - few ".fast5" files (6 files: ~3.5 GB)
   - chr22.fasta as referecne genome
 
 #### 1) Running directly from GitHub:
