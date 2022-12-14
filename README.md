@@ -27,7 +27,7 @@
 #### Example: Test run in RIS cluster
 - This test run takes input of:
   - few ".fast5" files (6 files: ~3.5 GB)
-  - chr22.fasta as referecne genome
+  - chr22.fasta as reference genome
 
 #### 1) Running directly from GitHub:
 ```bash
