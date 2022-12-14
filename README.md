@@ -56,3 +56,38 @@ However "```-profile ris```" is still required in both cases as it is important 
 - Output:
   - "results/" is the desired output from the test run
   - "work/" is the working directory for all tasks, can be removed if the pipeline ran successfully
+
+- Example for results output for sample "aml476081" in the test workflow
+```
+results/
+├── aligned_bams
+│   ├── aml476081.bam
+│   └── aml476081.bam.bai
+├── basecall
+│   └── fastq
+│       └── aml476081.fastq.gz
+├── multiqc
+│   ├── multiqc_data
+│   │   ├── mosdepth_cov_dist.txt
+│   │   ├── mosdepth_cumcov_dist.txt
+│   │   ├── mosdepth_perchrom.txt
+│   │   ├── multiqc.log
+│   │   ├── multiqc_citations.txt
+│   │   ├── multiqc_data.json
+│   │   ├── multiqc_general_stats.txt
+│   │   ├── multiqc_sources.txt
+│   │   └── pycoqc.txt
+│   └── multiqc_report.html
+├── pepper
+│   ├── haplotagged_bam
+│   │   ├── aml476081.haplotagged.bam
+│   │   └── aml476081.haplotagged.bam.bai
+│   └── vcf
+│       ├── aml476081.phased.vcf.gz
+│       ├── aml476081.phased.vcf.gz.tbi
+│       ├── aml476081.vcf.gz
+│       └── aml476081.vcf.gz.tbi
+└── pipeline_info
+    ├── pipeline_report.html
+    └── pipeline_timeline.html
+```
